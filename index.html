@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AtoZ Products</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6FAFA;--ink:#12303A;--muted:#5A7078;--teal:#0E7C86;--teal-d:#0A5C64;--coral:#FF6B57;--sun:#FFC857;--card:#fff;--line:#DDE9EA;--r:20px}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+h1,h2,h3,.logo{font-family:'Fredoka','Nunito',sans-serif;font-weight:600;line-height:1.2}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:12px 18px;background:#fff;border-bottom:1px solid var(--line)}
+.menu-btn{width:44px;height:44px;border:0;border-radius:14px;background:var(--teal);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;cursor:pointer}
+.menu-btn span{display:block;width:22px;height:3px;border-radius:3px;background:#fff}
+.logo{font-size:1.5rem;text-decoration:none;color:var(--teal-d)}
+.shade{position:fixed;inset:0;background:rgba(18,48,58,.45);opacity:0;pointer-events:none;transition:opacity .25s;z-index:30}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:min(300px,85vw);background:#fff;z-index:40;padding:22px;transform:translateX(-100%);transition:transform .25s;border-radius:0 var(--r) var(--r) 0;overflow:auto}
+body.open .drawer{transform:none}
+body.open .shade{opacity:1;pointer-events:auto}
+.drawer h2{margin:0 0 14px;font-size:1.2rem;color:var(--teal-d)}
+.drawer a{display:flex;gap:10px;align-items:center;padding:12px 14px;margin-bottom:6px;border-radius:14px;text-decoration:none;font-weight:700}
+.drawer a:hover,.drawer a.here{background:#E3F3F4;color:var(--teal-d)}
+.hero{max-width:1050px;margin:20px auto 0;padding:44px 28px;border-radius:28px;background:linear-gradient(135deg,var(--teal),#13A3A0);color:#fff;text-align:center}
+.hero h1{margin:0 0 10px;font-size:clamp(1.8rem,6vw,2.8rem)}
+.hero p{margin:0 auto;max-width:520px;opacity:.95}
+main{max-width:1050px;margin:0 auto;padding:24px 16px 10px}
+.sec-title{font-size:1.4rem;margin:8px 4px 16px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.tile{display:block;text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px 18px;text-align:center;transition:transform .2s,box-shadow .2s}
+.tile:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(14,124,134,.15)}
+.tile .em{font-size:2.4rem;display:block}
+.tile b{font-family:'Fredoka',sans-serif;font-size:1.1rem}
+.page-head{max-width:1050px;margin:0 auto;padding:28px 20px 0}
+.page-head h1{margin:0 0 6px;font-size:clamp(1.6rem,5vw,2.3rem);color:var(--teal-d)}
+.page-head p{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px}
+.card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(14,124,134,.16)}
+.pic{aspect-ratio:4/3;background:#E3F3F4;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.pic img{width:100%;height:100%;object-fit:contain;background:#fff}
+.badge{position:absolute;top:12px;left:12px;background:var(--sun);color:var(--ink);font-weight:800;font-size:.8rem;padding:4px 12px;border-radius:20px}
+.body{padding:18px;display:flex;flex-direction:column;flex:1;gap:8px}
+.body h3{margin:0;font-size:1.2rem}
+.body p{margin:0;color:var(--muted);font-size:.95rem}
+.feats{list-style:none;margin:4px 0 8px;padding:0;flex:1}
+.feats li{position:relative;padding-left:26px;margin-bottom:4px;font-size:.95rem}
+.feats li::before{content:"✓";position:absolute;left:0;top:3px;width:19px;height:19px;border-radius:50%;background:#D5F0EC;color:var(--teal-d);font-size:.75rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+.buy{display:block;text-align:center;background:var(--coral);color:#fff;font-weight:800;text-decoration:none;padding:13px;border-radius:16px;transition:background .2s}
+.buy:hover{background:#E8523E}
+footer{max-width:700px;margin:30px auto 40px;padding:0 20px;text-align:center;color:var(--muted);font-size:.85rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <button class="menu-btn" id="menuBtn" aria-label="Open categories menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <a class="logo" href="#home">AtoZ Products</a>
+</header>
+<div class="shade" id="shade"></div>
+<nav class="drawer" id="drawer" aria-label="Categories"></nav>
+
+<div id="view"></div>
+
+<footer>As an Amazon Associate I earn from qualifying purchases. Buying through these links costs you nothing extra.</footer>
+
+<script>
+/* ==================================================================
+   YAHAN SE EDIT KARNA HAI  (EDIT ONLY THIS PART)
+
+   Naya CATEGORY jodne ke liye: neeche ek poora { id: ... } block copy
+   karke last block ke baad paste kijiye (beech mein comma , zaroor).
+
+   Naya PRODUCT jodne ke liye: kisi category ke "products" ke andar
+   ek { title: ... } block copy karke paste kijiye (beech mein comma).
+
+   - id:       chhota english naam, bina space ke (jaise "diwali")
+   - emoji:    category ka icon
+   - badge:    optional (nahi chahiye to wo line hata dein)
+   - image:    Amazon SiteStripe image link ya apni photo ("images/p1.jpg")
+   - link:     aapka Amazon affiliate link
+   ================================================================== */
+const CATEGORIES = [
+  {
+    id: "christmas",
+    name: "Christmas",
+    emoji: "🎄",
+    intro: "Gift and decoration ideas for the season.",
+    products: [
+      {
+        title: "Sample Product 1 (replace me)",
+        badge: "Top pick",
+        image: "images/sample1.jpg",
+        summary: "One or two lines about what this product is and who it is good for.",
+        features: ["First key feature", "Second key feature", "Third key feature"],
+        link: "https://www.amazon.in/dp/XXXXXXXXXX?tag=yourid-21"
+      },
+      {
+        title: "Sample Product 2 (replace me)",
+        image: "images/sample2.jpg",
+        summary: "One or two lines about what this product is and who it is good for.",
+        features: ["First key feature", "Second key feature", "Third key feature"],
+        link: "https://www.amazon.in/dp/XXXXXXXXXX?tag=yourid-21"
+      }
+    ]
+  },
+  {
+    id: "books",
+    name: "Study Books",
+    emoji: "📚",
+    intro: "Books and study material I recommend for exam preparation.",
+    products: [
+      {
+        title: "Sample Book (replace me)",
+        image: "images/book1.jpg",
+        summary: "One or two lines about this book and who it is good for.",
+        features: ["First key feature", "Second key feature", "Third key feature"],
+        link: "https://www.amazon.in/dp/XXXXXXXXXX?tag=yourid-21"
+      }
+    ]
+  }
+];
+/* ==================== EDIT KHATAM. NEECHE KUCH NAHI BADALNA ==================== */
+
+const $ = id => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; };
+const view = $('view'), drawer = $('drawer'), btn = $('menuBtn');
+
+function toggle(open){ document.body.classList.toggle('open', open); btn.setAttribute('aria-expanded', open); }
+btn.onclick = () => toggle(!document.body.classList.contains('open'));
+$('shade').onclick = () => toggle(false);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') toggle(false); });
+
+function renderMenu(current){
+  drawer.innerHTML = '';
+  drawer.appendChild(el('h2', '', 'Categories'));
+  [{ id:'home', name:'Home', emoji:'🏠' }, ...CATEGORIES].forEach(c => {
+    const a = el('a', c.id === current ? 'here' : '', c.emoji + '  ' + c.name);
+    a.href = '#' + c.id; drawer.appendChild(a);
+  });
+}
+
+function renderHome(){
+  view.innerHTML = '';
+  const hero = el('section', 'hero');
+  hero.append(el('h1', '', 'Handpicked finds, A to Z'),
+    el('p', '', 'Products I like, with clear features and a direct link to buy. Open the menu at the top left to browse categories.'));
+  const main = el('main');
+  main.appendChild(el('h2', 'sec-title', 'Browse categories'));
+  const tiles = el('div', 'tiles');
+  CATEGORIES.forEach(c => {
+    const a = el('a', 'tile'); a.href = '#' + c.id;
+    a.append(el('span', 'em', c.emoji), el('b', '', c.name));
+    tiles.appendChild(a);
+  });
+  main.appendChild(tiles);
+  view.append(hero, main);
+  document.title = 'AtoZ Products';
+}
+
+function renderCategory(c){
+  view.innerHTML = '';
+  const head = el('section', 'page-head');
+  head.append(el('h1', '', c.emoji + ' ' + c.name), el('p', '', c.intro || ''));
+  const main = el('main'), grid = el('div', 'grid');
+  c.products.forEach(p => {
+    const card = el('article', 'card'), pic = el('div', 'pic');
+    const img = new Image(); img.src = p.image; img.alt = p.title; img.loading = 'lazy';
+    img.onerror = () => { img.remove(); pic.textContent = 'Image coming soon'; };
+    pic.appendChild(img);
+    if (p.badge) card.appendChild(el('span', 'badge', p.badge));
+    const body = el('div', 'body');
+    body.append(el('h3', '', p.title), el('p', '', p.summary));
+    const ul = el('ul', 'feats');
+    (p.features || []).forEach(f => ul.appendChild(el('li', '', f)));
+    const buy = el('a', 'buy', 'Buy on Amazon');
+    buy.href = p.link; buy.target = '_blank'; buy.rel = 'sponsored noopener noreferrer';
+    body.append(ul, buy);
+    card.append(pic, body);
+    grid.appendChild(card);
+  });
+  main.appendChild(grid);
+  view.append(head, main);
+  document.title = c.name + ' | AtoZ Products';
+}
+
+function route(forceId){
+  const id = forceId || location.hash.slice(1) || 'home';
+  const c = CATEGORIES.find(x => x.id === id);
+  renderMenu(c ? id : 'home');
+  c ? renderCategory(c) : renderHome();
+  toggle(false);
+  window.scrollTo(0, 0);
+}
+/* menu/tile clicks are handled directly, so pages open even if the hash does not change */
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  e.preventDefault();
+  const id = a.getAttribute('href').slice(1);
+  try { history.replaceState(null, '', '#' + id); } catch (err) {}
+  route(id);
+});
+window.addEventListener('hashchange', () => route());
+route();
+</script>
+</body>
+</html>
